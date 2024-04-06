@@ -50,36 +50,36 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
 
-      # - name: Fetch public instance id
-      #   run: |
-      #     INSTANCE_IDS=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=oidc-instance" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].InstanceId" --output text | tr '\n' ' ')
-      #     echo "Debugging INSTANCE_IDS: $INSTANCE_IDS"
-      #     echo "instance_ids=$INSTANCE_IDS" >> $GITHUB_ENV
+      - name: Fetch public instance id
+        run: |
+          INSTANCE_IDS=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=oidc-instance" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].InstanceId" --output text | tr '\n' ' ')
+          echo "Debugging INSTANCE_IDS: $INSTANCE_IDS"
+          echo "instance_ids=$INSTANCE_IDS" >> $GITHUB_ENV
 
-      # - name: Fetch public instance id
-      #   run: |
-      #     for ID in $instance_ids; do
-      #       aws ssm send-command \
-      #         --instance-ids "$ID" \
-      #         --document-name "AWS-RunShellScript" \
-      #         --parameters commands='[
-      #           "sudo apt update && sudo apt install -y nginx",
-      #           "cd /var/www",
-      #           "sudo mkdir -p ssm",
-      #           "cd ssm",
-      #           "echo '\''<!doctype html><html><head><meta charset=\"utf-8\"><title>Hello, Nginx!</title></head><body><h1>Hello, Nginx!</h1><p>We have just configured our Nginx web server on Ubuntu created with a SSM command!</p></body></html>'\'' | sudo tee index.html",
-      #           "echo '\''server { listen 80; listen [::]:80; server_name ssm.com; root /var/www/ssm; index index.html; location / { try_files $uri $uri/ =404; }}'\'' | sudo tee /etc/nginx/sites-enabled/ssm_site",
-      #           "sudo rm /etc/nginx/sites-enabled/default",
-      #           "sudo systemctl restart nginx"
-      #         ]' \
-      #         --output text
-      #     done
+      - name: Fetch public instance id
+        run: |
+          for ID in $instance_ids; do
+            aws ssm send-command \
+              --instance-ids "$ID" \
+              --document-name "AWS-RunShellScript" \
+              --parameters commands='[
+                "sudo apt update && sudo apt install -y nginx",
+                "cd /var/www",
+                "sudo mkdir -p ssm",
+                "cd ssm",
+                "echo '\''<!doctype html><html><head><meta charset=\"utf-8\"><title>Hello, Nginx!</title></head><body><h1>Hello, Nginx!</h1><p>We have just configured our Nginx web server on Ubuntu created with a SSM command!</p></body></html>'\'' | sudo tee index.html",
+                "echo '\''server { listen 80; listen [::]:80; server_name ssm.com; root /var/www/ssm; index index.html; location / { try_files $uri $uri/ =404; }}'\'' | sudo tee /etc/nginx/sites-enabled/ssm_site",
+                "sudo rm /etc/nginx/sites-enabled/default",
+                "sudo systemctl restart nginx"
+              ]' \
+              --output text
+          done
       
-      # - name: Fetch and output public instance IP
-      #   run: |
-      #     for ID in $instance_ids; do
-      #       PUBLIC_IP=$(aws ec2 describe-instances \
-      #         --instance-ids "$ID" \
-      #         --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
-      #       echo "Instance ID $ID has public IP: $PUBLIC_IP"
-      #     done
+      - name: Fetch and output public instance IP
+        run: |
+          for ID in $instance_ids; do
+            PUBLIC_IP=$(aws ec2 describe-instances \
+              --instance-ids "$ID" \
+              --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+            echo "Instance ID $ID has public IP: $PUBLIC_IP"
+          done
