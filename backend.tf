@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "s3-terraform-state-fii-practic-tefaniuewygtiouwetxxf651111"
+    bucket         = "s3-terraform-state-fii-practic-tefaniuewygtiouwetxxf65111"
     key            = "terraform.tfstate"
     region         = "eu-central-1"
     encrypt        = true
@@ -17,7 +17,7 @@ terraform {
    source  = "cloudposse/s3-bucket/aws"
    version = "3.1.3"
 
-   bucket_name        = "s3-terraform-state-fii-practic-tefaniuewygtiouwetxxf651111"
+   bucket_name        = "s3-terraform-state-fii-practic-tefaniuewygtiouwetxxf65111"
    versioning_enabled = true
  }
 
