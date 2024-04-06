@@ -2,15 +2,15 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-terraform {
-  backend "s3" {
-    bucket         = "s3-terraform-state-fii-practic-tefaniuewygtiouwetxxf65111"
-    key            = "terraform.tfstate"
-    region         = "eu-central-1"
-    encrypt        = true
-    dynamodb_table = "terraform-state-lock"
-  }
-}
+#terraform {
+#  backend "s3" {
+#    bucket         = "s3-terraform-state-fii-practic-tefaniuewygtiouwetxxf65111"
+#    key            = "terraform.tfstate"
+#    region         = "eu-central-1"
+#    encrypt        = true
+#    dynamodb_table = "terraform-state-lock"
+#  }
+#}
 
 
  module "s3-terraform-state" {
